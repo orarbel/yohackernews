@@ -9,8 +9,8 @@ class AlreadyYoyed(db.Expando):
     url = db.StringProperty()
 
 class Cron(webapp2.RequestHandler):
-    def send_yo(self):
-        data = {'api_token':api_token}
+    def send_yo(self, link):
+        data = {'api_token':api_token, 'link': link}
         data = urllib.urlencode(data)
         request_object = urllib2.Request('http://api.justyo.co/yoall/', data)
         response = urllib2.urlopen(request_object)
@@ -31,7 +31,7 @@ class Cron(webapp2.RequestHandler):
             print already_yoyed
             if top['link'] not in already_yoyed:
                 self.add_to_db(top['link'])
-                self.send_yo()
+                self.send_yo(top['link'])
             
 application = webapp2.WSGIApplication([
     ('/cron', Cron)
